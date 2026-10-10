@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor Celsius a Fahrenheit | Modelo TensorFlow</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z'/></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f0f4f8;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .card {
+            max-width: 520px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.02);
+            padding: 2rem 1.8rem 2.2rem 1.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #eef2ff;
+            color: #1e3a8a;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
+            letter-spacing: 0.3px;
+            margin-bottom: 1.2rem;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #0a2540;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.3px;
+        }
+
+        .description {
+            font-size: 0.9rem;
+            color: #5b6e8c;
+            margin-bottom: 1.8rem;
+            line-height: 1.4;
+            border-left: 3px solid #94a3b8;
+            padding-left: 0.8rem;
+        }
+
+        .slider-section {
+            background: #f8fafc;
+            border-radius: 1.5rem;
+            padding: 1.2rem 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 4px;
+            -webkit-appearance: none;
+            background: #cbd5e1;
+            border-radius: 10px;
+            outline: none;
+            margin: 1rem 0 0.5rem;
+        }
+
+        input[type="range"]:focus {
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #3b82f6;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            border: 2px solid white;
+            transition: 0.1s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            background: #2563eb;
+        }
+
+        .value-row {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+            gap: 12px;
+        }
+
+        .celsius-value {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            padding: 0.3rem 1rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #0f172a;
+        }
+
+        .number-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 2rem;
+            padding: 0.2rem 0.6rem 0.2rem 1rem;
+        }
+
+        .number-input label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #475569;
+        }
+
+        .number-input input {
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            width: 80px;
+            padding: 0.4rem 0;
+            text-align: center;
+            font-family: 'Inter', monospace;
+            background: transparent;
+            color: #0f172a;
+        }
+
+        .number-input input:focus {
+            outline: none;
+        }
+
+        .result-box {
+            background: linear-gradient(115deg, #f1f5f9, #ffffff);
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            margin: 1.8rem 0 1rem;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .result-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+            color: #5b6e8c;
+        }
+
+        .fahrenheit-value {
+            font-size: 3.2rem;
+            font-weight: 700;
+            color: #0a2540;
+            line-height: 1.2;
+            margin: 0.2rem 0;
+        }
+
+        .fahrenheit-value small {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #5b6e8c;
+        }
+
+        .note {
+            font-size: 0.7rem;
+            color: #6c86a3;
+            margin-top: 0.5rem;
+        }
+
+        .formula {
+            background: #f8fafc;
+            border-radius: 1.2rem;
+            padding: 0.6rem;
+            text-align: center;
+            font-size: 0.7rem;
+            font-family: monospace;
+            color: #334155;
+            margin-top: 1rem;
+        }
+
+        .formula span {
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        footer {
+            font-size: 0.65rem;
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #8ba0bc;
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                padding: 1.5rem;
+            }
+            .fahrenheit-value {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="badge">TensorFlow · Modelo predictivo</div>
+    <h1>ThermoNet</h1>
+    <div class="description">
+        Red neuronal entrenada para convertir grados Celsius a Fahrenheit.
+        Desliza la barra o ingresa un valor numérico.
+    </div>
+
+    <div class="slider-section">
+        <div class="slider-header">
+            <span>Grados Celsius</span>
+            <span id="sliderLabel">0.0 °C</span>
+        </div>
+        <input type="range" id="celsiusSlider" min="-100" max="100" step="any" value="0">
+        <div class="value-row">
+            <div class="celsius-value">
+                <span id="celsiusDisplay">0.0</span> °C
+            </div>
+            <div class="number-input">
+                <label>Valor exacto</label>
+                <input type="number" id="celsiusNumber" step="0.1" value="0.0">
+            </div>
+        </div>
+    </div>
+
+    <div class="result-box">
+        <div class="result-label">Predicción del modelo</div>
+        <div class="fahrenheit-value">
+            <span id="fahrenheitValue">32.0</span> <small>°F</small>
+        </div>
+        <div class="note" id="dynamicNote"></div>
+    </div>
+
+    <div class="formula">
+        <span>°F = (°C × 9/5) + 32</span> · Conversión en tiempo real
+    </div>
+    <footer>
+        El modelo ha sido entrenado con TensorFlow · API desplegada con Docker
+    </footer>
+</div>
+
+<script>
+    (function() {
+        const slider = document.getElementById('celsiusSlider');
+        const celsiusNumber = document.getElementById('celsiusNumber');
+        const celsiusDisplaySpan = document.getElementById('celsiusDisplay');
+        const sliderLabel = document.getElementById('sliderLabel');
+        const fahrenheitSpan = document.getElementById('fahrenheitValue');
+        const dynamicNote = document.getElementById('dynamicNote');
+
+        // ✅ URL apuntando directo a Docker en localhost
+        const API_URL = "http://localhost:8000/predict";
+
+        async function obtenerPrediccion(celsius) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ celsius: celsius })
+                });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                return data.fahrenheit ?? data.predicted_fahrenheit;
+            } catch (error) {
+                console.error("Error API:", error);
+                dynamicNote.innerText = "⚠️ No se pudo conectar con el modelo. Verifica que Docker esté corriendo.";
+                return null;
+            }
+        }
+
+        async function updateAllFromCelsius(rawCelsius) {
+            let clamped = parseFloat(rawCelsius);
+            if (isNaN(clamped)) clamped = 0;
+            clamped = Math.min(100, Math.max(-100, clamped));
+            let roundedC = Math.round(clamped * 10) / 10;
+            if (roundedC === -0) roundedC = 0;
+
+            slider.value = roundedC;
+            celsiusNumber.value = roundedC;
+            celsiusDisplaySpan.innerText = roundedC.toFixed(1);
+            sliderLabel.innerText = roundedC.toFixed(1) + " °C";
+
+            const fahr = await obtenerPrediccion(roundedC);
+            if (fahr !== null) {
+                const fahrRounded = Math.round(fahr * 10) / 10;
+                fahrenheitSpan.innerText = fahrRounded.toFixed(1);
+                dynamicNote.innerText = `Resultado basado en la red neuronal entrenada.`;
+            } else {
+                fahrenheitSpan.innerText = "--";
+            }
+        }
+
+        slider.addEventListener('input', (e) => updateAllFromCelsius(e.target.value));
+        celsiusNumber.addEventListener('change', (e) => updateAllFromCelsius(e.target.value));
+        celsiusNumber.addEventListener('input', (e) => updateAllFromCelsius(e.target.value));
+
+        updateAllFromCelsius(0);
+    })();
+</script>
+</body>
+</html>
