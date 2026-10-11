@@ -266,4 +266,4 @@ Python · TensorFlow / Keras · FastAPI · Uvicorn · NumPy · Docker · HTML5 �
 
 **Katia Paola Victoria Escalera**
 
-[GitHub](https://github.com/KPVE2004) · [LinkedIn](https://www.linkedin.com/in/katia-paola-victoria-escalera-148688442/) · [Email](mailto:kp_victoria08@hotmail.com)
+[GitHub](https://github.com/KPVE2004) · [LinkedIn](https://www.linkedin.com/in/katia-victoria) · [Email](mailto:kp_victoria08@hotmail.com)
